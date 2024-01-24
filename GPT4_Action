@@ -1,0 +1,142 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Biomedical Paper Retrieval Service",
+    "description": "Retrieves the latest research papers related to biomedicine, especially human diseases such as cancer, and provides summarization of these papers.",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://drchat.xyz"
+    }
+  ],
+  "paths": {
+    "/fetch_papers": {
+      "post": {
+        "description": "Retrieve research papers based on a query",
+        "operationId": "FetchPapers",
+        "requestBody": {
+          "description": "Query parameters for the biomedical research papers",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search query for the papers",
+                    "example": "cancer"
+                  },
+                  "max_results": {
+                    "type": "integer",
+                    "description": "Maximum number of results to return",
+                    "example": 10
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A list of research papers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Paper"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/summarize_papers": {
+      "post": {
+        "description": "Summarize the content of the provided research papers",
+        "operationId": "SummarizePapers",
+        "requestBody": {
+          "description": "List of research papers to be summarized",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "papers": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Paper"
+                    }
+                  },
+                  "summary_length": {
+                    "type": "integer",
+                    "example": 300
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A summarized version of the research papers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "summaries": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Paper": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "abstract": {
+            "type": "string"
+          },
+          "publication_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "doi": {
+            "type": "string"
+          },
+          "pmid": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
